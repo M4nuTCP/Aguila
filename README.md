@@ -3,7 +3,6 @@
 
 Documentación: https://m4nutcp.github.io/Documentacion-Aguila/
 
-****
 # Instalación 
 
 ```
