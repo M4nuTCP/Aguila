@@ -13,7 +13,7 @@ tar -xzvf mitmproxy-10.3.0-linux-x86_64.tar.gz
 (solo es necesario mitmdump)
 chmod +x Aguila.py AguilaHttps.py mitmdupm 
 pip install -r requirements.txt
-sudo python3 ./Aguila
+sudo python3 Aguila.py
 ```
 
 ****
