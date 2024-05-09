@@ -15,3 +15,7 @@ chmod +x Aguila.py AguilaHttps.py mitmdupm
 pip install -r requirements.txt
 sudo ./Aguila
 ```
+****
+
+![image](https://github.com/M4nuTCP/Aguila/assets/96147300/3a7f146b-94ac-47a5-9a82-d41c39e068ed)
+
