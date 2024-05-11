@@ -533,9 +533,16 @@ def main():
         except ReturnToMenuException:
             continue
    
-
+def help():
+    parser = argparse.ArgumentParser(description='Águila, herramienta de hacking wifi para interceptar modificar y visualizar paquetes dentro de una red.')
+    parser.add_argument('--Aguila-https', help='Permite poder ver credneciales y y consultas https')
+    parser.add_argument('--Aguila-http', help='Crea un demonio que recopila consultas http de la máquian víctima')
+    parser.add_argument('--Aguila-infection', help='Permite infectar dominio y cambiar el contenido de estas')
+    args = parser.parse_args()
+    print("Argumentos recibidos:", args)
 
 if __name__ == '__main__':
+    help()
     main()
 
 
