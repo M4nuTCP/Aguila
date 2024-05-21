@@ -302,7 +302,7 @@ def aguila_http():
 
 def Aguila_arp_spoof():
 
-    logging.getLogger("scapy.runtime").setLevel(logging.ERROR) # para que no salga los mensajes de error
+    logging.getLogger("scapy.runtime").setLevel(logging.ERROR) 
 
     def get_my_mac(interface):
         try:
