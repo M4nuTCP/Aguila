@@ -81,7 +81,7 @@ def configuracion_proxy():
                             |___/                      |___/ 
           
 
-Visita la página de la documentaciñon de proxy para saber como se configura: https://m4nutcp.github.io/Documentacion-Aguila/
+Visita la página de la documentaciñon de Águila para saber como se configura el proxy: https://m4nutcp.github.io/Documentacion-Aguila/
 
     ''')
     input("Presiona Enter para regresar...")
