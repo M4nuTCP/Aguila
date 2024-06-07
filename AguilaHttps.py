@@ -48,8 +48,7 @@ def response(packet):
     data = packet.request.get_text()
 
     if has_keywords(data, keywords):
-        # Divide el texto por espacios y revisa la longitud
         words = data.split()
         if len(words) > 20:
-            data = ' '.join(words[:20])  # Solo muestra las primeras 20 palabras
+            data = ' '.join(words[:20]) 
         print(f"\n\n[+] Credenciales potenciales capturada:\n\n{data}\n\n")
