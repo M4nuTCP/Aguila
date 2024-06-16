@@ -10,8 +10,9 @@ def salida(sig, frame):
 
 signal.signal(signal.SIGINT, salida)
 
-os.system('clear')
-print('''
+print("\033c", end="") # Clear encodeado
+
+print(r'''
                       _ _                      _   _                _       
      /\              (_) |           /\       | | (_)              | |      
     /  \   __ _ _   _ _| | __ _     /  \   ___| |_ ___   ____ _  __| | __ _ 
